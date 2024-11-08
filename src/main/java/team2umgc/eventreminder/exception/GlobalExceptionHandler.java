@@ -3,7 +3,6 @@ package team2umgc.eventreminder.exception;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -29,9 +28,6 @@ public class GlobalExceptionHandler {
     @Autowired
     private ResponseGenerator responseGenerator;
 
-    @Autowired
-    private MessageSource messageSource;
-
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -42,62 +38,62 @@ public class GlobalExceptionHandler {
         if (objectError instanceof FieldError) {
             ex.getBindingResult().getFieldErrors().forEach(fieldError -> {
                 String fieldName = fieldError.getField();
-                String errorMessage = messageSource.getMessage(fieldError.getDefaultMessage(), new Object[]{}, lang);
+                String errorMessage = fieldError.getDefaultMessage();
                 fieldValidationErrorList.add(new FieldValidationError(fieldName, errorMessage));
             });
         }
 
         logger.error("Field error - {} ", Utility.objectToJson(fieldValidationErrorList));
 
-        return responseGenerator.generateResponse(fieldValidationErrorList, ResponseCode.METHOD_ARGUMENT_NOTVALID, ResponseMessage.REQUIRED_DATA_ELEMENT_MISSING_MSG, new Object[]{}, lang);
+        return responseGenerator.generateResponse(fieldValidationErrorList, ResponseCode.METHOD_ARGUMENT_NOTVALID, ResponseMessage.REQUIRED_DATA_ELEMENT_MISSING_MSG);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<?> handleNoHandlerFoundException(NoHandlerFoundException e, Locale lang) {
+    public ResponseEntity<?> handleNoHandlerFoundException(NoHandlerFoundException e) {
         logger.error(e.toString());
-        return responseGenerator.generateResponse(ResponseCode.RESOURCE_NOT_FOUND, ResponseMessage.RESOURCE_NOT_FOUND_MSG, new Object[]{}, lang);
+        return responseGenerator.generateResponse(ResponseCode.RESOURCE_NOT_FOUND, ResponseMessage.RESOURCE_NOT_FOUND_MSG);
     }
 
     @ExceptionHandler(ObjectNotFondException.class)
-    public ResponseEntity<?> handleObjectNotFondException(ObjectNotFondException e, Locale lang) {
+    public ResponseEntity<?> handleObjectNotFondException(ObjectNotFondException e) {
         logger.error(e.toString());
-        return responseGenerator.generateResponse(ResponseCode.ENTITY_NOT_FOUND, e.getMessage(), new Object[]{}, lang);
+        return responseGenerator.generateResponse(ResponseCode.ENTITY_NOT_FOUND, e.getMessage());
     }
 
     @ExceptionHandler(CommonException.class)
-    public ResponseEntity<?> handleCommonException(CommonException e, Locale lang) {
+    public ResponseEntity<?> handleCommonException(CommonException e) {
         logger.error(e.toString());
-        return responseGenerator.generateResponse(e.getCode(), e.getMessage(), new Object[]{}, lang);
+        return responseGenerator.generateResponse(e.getCode(), e.getMessage());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e, Locale lang) {
+    public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         logger.error(e.toString());
-        return responseGenerator.generateResponse(ResponseCode.MESSAGE_NOTREADABLE, ResponseMessage.MESSAGE_NOTREADABLE_MSG, new Object[]{}, lang);
+        return responseGenerator.generateResponse(ResponseCode.MESSAGE_NOTREADABLE, ResponseMessage.MESSAGE_NOTREADABLE_MSG);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e, Locale lang) {
+    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
         logger.error(e.toString());
-        return responseGenerator.generateResponse(ResponseCode.ILLEGAL_ARGUMENT, ResponseMessage.ILLEGAL_ARGUMENT_MSG, new Object[]{}, lang);
+        return responseGenerator.generateResponse(ResponseCode.ILLEGAL_ARGUMENT, ResponseMessage.ILLEGAL_ARGUMENT_MSG);
     }
 
     @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity<?> handleNullPointerException(NullPointerException e, Locale lang) {
+    public ResponseEntity<?> handleNullPointerException(NullPointerException e) {
         logger.error(e.toString());
-        return responseGenerator.generateResponse(ResponseCode.NULL_POINTER, ResponseMessage.NULL_POINTER_MSG, new Object[]{}, lang);
+        return responseGenerator.generateResponse(ResponseCode.NULL_POINTER, ResponseMessage.NULL_POINTER_MSG);
     }
 
     @ExceptionHandler(ConnectException.class)
-    public ResponseEntity<?> handleConnectException(ConnectException e, Locale lang) {
+    public ResponseEntity<?> handleConnectException(ConnectException e) {
         logger.error(e.toString());
-        return responseGenerator.generateResponse(ResponseCode.CONNECT_EXCEPTION, ResponseMessage.CONNECT_EXCEPTION_MSG, new Object[]{}, lang);
+        return responseGenerator.generateResponse(ResponseCode.CONNECT_EXCEPTION, ResponseMessage.CONNECT_EXCEPTION_MSG);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(Exception e, Locale lang) {
+    public ResponseEntity<?> handleException(Exception e) {
         logger.error(e.toString());
-        return responseGenerator.generateResponse(ResponseCode.FAILED, ResponseMessage.SYSTEM_ERROR_MSG, new Object[]{}, lang);
+        return responseGenerator.generateResponse(ResponseCode.FAILED, ResponseMessage.SYSTEM_ERROR_MSG);
     }
 
 }

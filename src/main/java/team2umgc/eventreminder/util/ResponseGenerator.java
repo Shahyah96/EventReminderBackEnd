@@ -15,28 +15,26 @@ import java.util.Locale;
 @Component
 public class ResponseGenerator {
 
-    @Autowired
-    private MessageSource messageSource;
 
     private static final Logger logger = LoggerFactory.getLogger(ResponseGenerator.class);
 
-    public ResponseEntity<Object> generateResponse(String responseCode, String messagePropertyName, Object[] params, Locale lang) {
+    public ResponseEntity<Object> generateResponse(String responseCode, String message) {
         Response response = new Response();
         response.setStatus(responseCode);
-        response.setMessage(messageSource.getMessage(messagePropertyName, params, lang));
+        response.setMessage(message);
 
-        logger.debug(responseCode + "-" + (messageSource.getMessage(messagePropertyName, params, lang) + "\n"));
+        logger.debug(responseCode + "-" + message + "\n");
         logger.debug(response.toString());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public ResponseEntity<Object> generateResponse(Object data, String responseCode, String messagePropertyName, Object[] params, Locale lang) {
+    public ResponseEntity<Object> generateResponse(Object data, String responseCode, String message) {
         Response response = new Response();
         response.setStatus(responseCode);
-        response.setMessage(messageSource.getMessage(messagePropertyName, params, lang));
+        response.setMessage(message);
         response.setData(data);
 
-        logger.debug(responseCode + "-" + (messageSource.getMessage(messagePropertyName, params, lang) + "\n"));
+        logger.debug(responseCode + "-" + message + "\n");
         logger.debug(response.toString());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

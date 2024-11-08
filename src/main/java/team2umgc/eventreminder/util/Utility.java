@@ -2,6 +2,7 @@ package team2umgc.eventreminder.util;
 
 import com.google.gson.Gson;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Utility {
@@ -11,8 +12,8 @@ public class Utility {
         return new Gson().toJson(object);
     }
 
-    public static Date getSystemDate() {
-        return new Date();
+    public static LocalDateTime getSystemDate() {
+        return LocalDateTime.now();
     }
 
 }
